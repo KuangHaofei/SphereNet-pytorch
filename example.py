@@ -5,6 +5,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 import numpy as np
+from torchsummary import summary
 
 
 class SphereNet(nn.Module):
@@ -122,8 +123,17 @@ def main():
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=args.test_batch_size, shuffle=False, **kwargs)
 
     # Train
-    sphere_model = SphereNet().to(device)
-    model = Net().to(device)
+    sphere_model = SphereNet()
+    sphere_model = nn.DataParallel(sphere_model)
+    sphere_model.to(device)
+
+    model = Net()
+    model = nn.DataParallel(model)
+    model.to(device)
+
+    summary(sphere_model, (1, 60, 60))
+    summary(model, (1, 60, 60))
+
     if args.optimizer == 'adam':
         sphere_optimizer = torch.optim.Adam(sphere_model.parameters(), lr=args.lr)
         optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)

@@ -61,6 +61,7 @@ def cal_index(h, w, img_r, img_c):
 @lru_cache(None)
 def _gen_filters_coordinates(h, w, stride):
     co = np.array([[cal_index(h, w, i, j) for j in range(0, w, stride)] for i in range(0, h, stride)])
+    print(co.shape)
     return np.ascontiguousarray(co.transpose([4, 0, 1, 2, 3]))
 
 

@@ -177,7 +177,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--idx', nargs='+', required=True,
                         help='image indices to demo')
-    parser.add_argument('--out_dir', default='datas/demo',
+    parser.add_argument('--out_dir', default='../datas/demo',
                         help='directory to output demo image')
     parser.add_argument('--dataset', default='OmniMNIST',
                         choices=['OmniMNIST', 'OmniFashionMNIST'],
@@ -197,14 +197,18 @@ if __name__ == '__main__':
 
     os.makedirs(args.out_dir, exist_ok=True)
 
+    root_mnist = '../datas/MNIST'
+    root_fashionmnist = '../datas/FashionMNIST'
+
     if args.dataset == 'OmniMNIST':
-        dataset = OmniMNIST(fov=args.fov, flip=args.flip,
+        dataset = OmniMNIST(root=root_mnist,fov=args.fov, flip=args.flip,
                             h_rotate=args.h_rotate, v_rotate=args.v_rotate,
                             fix_aug=args.fix_aug)
     elif args.dataset == 'OmniFashionMNIST':
-        dataset = OmniFashionMNIST(fov=args.fov, flip=args.flip,
+        dataset = OmniFashionMNIST(root=root_fashionmnist, fov=args.fov, flip=args.flip,
                                    h_rotate=args.h_rotate, v_rotate=args.v_rotate,
                                    fix_aug=args.fix_aug)
+    print(args.idx)
 
     for idx in args.idx:
         idx = int(idx)
