@@ -143,7 +143,7 @@ class OmniDataset(data.Dataset):
 
 
 class OmniMNIST(OmniDataset):
-    def __init__(self, root='datas/MNIST', train=True,
+    def __init__(self, root='./datas/MNIST', train=True,
                  download=True, *args, **kwargs):
         '''
         Omnidirectional MNIST
@@ -156,7 +156,7 @@ class OmniMNIST(OmniDataset):
 
 
 class OmniFashionMNIST(OmniDataset):
-    def __init__(self, root='datas/FashionMNIST', train=True,
+    def __init__(self, root='./datas/FashionMNIST', train=True,
                  download=True, *args, **kwargs):
         '''
         Omnidirectional FashionMNIST

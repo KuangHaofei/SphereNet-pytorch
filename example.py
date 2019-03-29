@@ -7,14 +7,15 @@ import torch.nn.functional as F
 import numpy as np
 from torchsummary import summary
 
+k = 5
 
 class SphereNet(nn.Module):
     def __init__(self):
         super(SphereNet, self).__init__()
-        self.conv1 = SphereConv2D(1, 32, stride=1)
-        self.pool1 = SphereMaxPool2D(stride=2)
-        self.conv2 = SphereConv2D(32, 64, stride=1)
-        self.pool2 = SphereMaxPool2D(stride=2)
+        self.conv1 = SphereConv2D(1, 32, kernel_size=k, stride=1)
+        self.pool1 = SphereMaxPool2D(kernel_size=k, stride=2)
+        self.conv2 = SphereConv2D(32, 64, kernel_size=k, stride=1)
+        self.pool2 = SphereMaxPool2D(kernel_size=k, stride=2)
 
         self.fc = nn.Linear(14400, 10)
 
@@ -29,14 +30,14 @@ class SphereNet(nn.Module):
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 32, kernel_size=3)
-        self.conv2 = nn.Conv2d(32, 64, kernel_size=3)
-        self.fc = nn.Linear(64*13*13, 10)
+        self.conv1 = nn.Conv2d(1, 32, kernel_size=k)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=k)
+        self.fc = nn.Linear(64*12*12, 10)
 
     def forward(self, x):
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
         x = F.relu(F.max_pool2d(self.conv2(x), 2))
-        x = x.view(-1, 64*13*13)  # flatten, [B, C, H, W) -> (B, C*H*W)
+        x = x.view(-1, 64*12*12)  # flatten, [B, C, H, W) -> (B, C*H*W)
         x = self.fc(x)
         return x
 
@@ -49,6 +50,7 @@ def train(args, model, device, train_loader, optimizer, epoch):
         if data.dim() == 3:
             data = data.unsqueeze(1)  # (B, H, W) -> (B, C, H, W)
         output = model(data)
+        # print(output)
         loss = F.cross_entropy(output, target)
         loss.backward()
         optimizer.step()
